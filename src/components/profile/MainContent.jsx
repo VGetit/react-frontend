@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import apiClient from '../../api/axiosConfig'
 
 const StarRating = ({ rating }) => {
   const totalStars = 5;
@@ -11,7 +12,7 @@ const StarRating = ({ rating }) => {
         return (
           <i
             key={starValue}
-            className={`star-icon ${starValue <= solidStars ? 'fas fa-star solid' : 'far fa-star'}`}
+            className={`star-icon ${starValue <= solidStars ? 'fa-solid fa-star' : 'fa-regular fa-star'}`}
           ></i>
         );
       })}
@@ -71,7 +72,32 @@ const ContactsTable = ({ contacts }) => (
   </div>
 );
 
-const AddCommentForm = () => {
+const PhonesTable = ({ phones }) => (
+  <div className="contacts-table-container wow fadeInUp" data-wow-delay="0.1s">
+    <table className="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th scope="col">Number</th>
+          <th scope="col" className="text-center">Label</th>
+        </tr>
+      </thead>
+      <tbody>
+        {phones.map((phones, index) => (
+          <tr key={index}>
+            <td>{phones.number}</td>
+            <td></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+const handleCommentSubmit = async (slug, text, rating) => {
+  await apiClient.post(`/companies/digikeycom/comments/`, { text, rating });
+}
+
+const AddCommentForm = (slug) => {
   const [text, setText] = useState('');
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -82,7 +108,7 @@ const AddCommentForm = () => {
       alert('Please write a review and select a rating.');
       return;
     }
-    // BURADA API'YE POST İSTEĞİ ATILACAK
+    handleCommentSubmit(slug, text, rating);
     console.log({ text, rating });
     setText('');
     setRating(0);
@@ -119,16 +145,20 @@ const AddCommentForm = () => {
   );
 };
 
-function MainContent({ about, verifications, reviews, contacts }) {
+function MainContent({ slug, about, location, phones, verifications, reviews, contacts }) {
   return (
     <>
       <div className="section-title position-relative mb-4 pb-4">
-        <h1 className="mb-2">About Company</h1>
+        <h3 className="mb-2">About Company</h3>
       </div>
       <p className="mb-5">{about}</p>
+      <div className="section-title position-relative mb-4 pb-4">
+        <h3 className="mb-2">Location</h3>
+      </div>
+      <p className="mb-5">{location.address}</p>
 
       <div className="section-title position-relative mb-4 pb-4">
-        <h2 className="mb-2">Score Details</h2>
+        <h3 className="mb-2">Score Details</h3>
       </div>
       <div className="row g-4 mb-5">
         <div className="col-md-4 wow fadeIn" data-wow-delay="0.2s">
@@ -155,7 +185,16 @@ function MainContent({ about, verifications, reviews, contacts }) {
       </div>
 
       <div className="section-title position-relative mt-5 mb-4 pb-4">
-        <h2 className="mb-2">Contacts ({contacts.length})</h2>
+        <h3 className="mb-2">Telephones ({phones.length})</h3>
+      </div>
+      {phones && phones.length > 0 ? (
+        <PhonesTable phones={phones} />
+      ) : (
+        <p>No telephone information available.</p>
+      )}
+
+      <div className="section-title position-relative mt-5 mb-4 pb-4">
+        <h3 className="mb-2">Contacts ({contacts.length})</h3>
       </div>
       {contacts && contacts.length > 0 ? (
         <ContactsTable contacts={contacts} />
@@ -164,7 +203,7 @@ function MainContent({ about, verifications, reviews, contacts }) {
       )}
 
       <div className="section-title position-relative mt-5 mb-4 pb-4">
-        <h2 className="mb-2">Reviews</h2>
+        <h3 className="mb-2">Reviews</h3>
       </div>
       {reviews && reviews.length > 0 ? (
         reviews.map(comment => <TestimonialCard key={comment.id} review={comment} />)
@@ -174,9 +213,9 @@ function MainContent({ about, verifications, reviews, contacts }) {
 
       {/* YENİ: Yorum Ekleme Formu */}
       <div className="section-title position-relative mt-5 mb-4 pb-4">
-        <h2 className="mb-2">Your Opinion Matters</h2>
+        <h3 className="mb-2">Your Opinion Matters</h3>
       </div>
-      <AddCommentForm />
+      <AddCommentForm slug={slug}/>
     </>
   );
 }

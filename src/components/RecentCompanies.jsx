@@ -14,7 +14,7 @@ function RecentCompanies() {
     <div className="container-xxl py-5">
       <div className="container px-lg-5">
         <div className="section-title position-relative text-center mx-auto mb-5 pb-4 wow fadeInUp" data-wow-delay="0.1s" style={{ maxWidth: '600px' }}>
-          <h1 className="mb-3">Son Görüntülenenler</h1>
+          <h1 className="mb-3">Recently Viewed</h1>
         </div>
         <div className="row g-4 justify-content-center">
           {sampleCompanies.map((company, index) => (

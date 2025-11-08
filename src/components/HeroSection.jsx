@@ -5,24 +5,53 @@ import axios from 'axios';
 
 function HeroSection() {
   const [query, setQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchStatus, setSearchStatus] = useState(null);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (!query) {
-      alert("Please enter a website.");
+      setSearchStatus({
+        type: 'error',
+        message: 'Please enter a website URL.'
+      });
       return;
     }
 
-    console.log(`Aranan URL: ${query}`);
+    setIsSearching(true);
+    setSearchStatus(null);
+
     try {
+      const formattedUrl = query.startsWith('http') ? query : `https://${query}`;
       const response = await axios.get(`http://127.0.0.1:8000/companies/search/?url=${query}`);
-      const slug = response.data.company.url;
-      console.log(response.data);
-      if (slug) {
-        navigate(`/company/${slug}`);
+      
+      const { status, company, message } = response.data;
+
+      if (status === 'success') {
+        // Company exists and is processed
+        navigate(`/company/${company.slug}`);
+      } else if (status === 'processing') {
+        // Company is being scraped
+        setSearchStatus({
+          type: 'processing',
+          message: message || 'Gathering company information. This may take a few minutes.',
+          company: company
+        });
+        // Optionally navigate to a loading page
+        navigate(`/company/${company.slug}`);
       }
     } catch (error) {
-      console.error("Error during search!", error);
+      console.error("Search error:", error);
+      
+      const errorMessage = error.response?.data?.message || 
+                          'An error occurred while searching. Please try again.';
+      
+      setSearchStatus({
+        type: 'error',
+        message: errorMessage
+      });
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -40,12 +69,39 @@ function HeroSection() {
               <input
                 className="form-control"
                 type="text"
-                placeholder="Şirket adı veya web sitesi arayın..."
+                placeholder="Enter company website... (e.g., example.com)"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                disabled={isSearching}
               />
-              <button onClick={handleSearch} className="btn btn-secondary py-2 px-4 position-absolute">Search</button>
+              <button 
+                onClick={handleSearch} 
+                className="btn btn-secondary py-2 px-4 position-absolute"
+                disabled={isSearching}
+              >
+                {isSearching ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Searching...
+                  </>
+                ) : (
+                  'Search'
+                )}
+              </button>
             </div>
+            
+            {searchStatus && (
+              <div className={`mt-4 alert ${searchStatus.type === 'error' ? 'alert-danger' : 'alert-info'}`}>
+                <p className="mb-0">{searchStatus.message}</p>
+                {searchStatus.type === 'processing' && searchStatus.company && (
+                  <div className="mt-2">
+                    <strong>{searchStatus.company.name}</strong>
+                    <p className="mb-0 small">We'll notify you once the information is ready.</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
