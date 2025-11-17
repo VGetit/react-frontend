@@ -57,7 +57,7 @@ function Sidebar({ totalScore, scoreDetails, contact, socials, isProcessing }) {
       <ScoreCard score={totalScore} isProcessing={isProcessing} />
 
       <div className="profile-sidebar-card wow fadeInUp" data-wow-delay="0.5s">
-        <h4 className="card-title">Connect & Follow</h4>
+        <h4 className="card-title">Social Links</h4>
         <div className="social-buttons">
           {socialLinks.length > 0 ? (
             <div className="d-flex flex-wrap gap-2">
@@ -84,11 +84,6 @@ function Sidebar({ totalScore, scoreDetails, contact, socials, isProcessing }) {
             </p>
           )}
         </div>
-      </div>
-
-      <div className="profile-sidebar-card wow fadeInUp" data-wow-delay="0.7s">
-        <h4 className="card-title">Score Breakdown</h4>
-        <div dangerouslySetInnerHTML={{ __html: scoreDetails }} />
       </div>
     </>
   );

@@ -62,15 +62,9 @@ function CompanyProfilePage() {
           location: data.address || 'Address not available',
           phones: data.phone_numbers || [],
           totalScore: data.score || 0,
-          scoreFromVerifications: 2.0,
-          scoreFromReviews: 2.8,
           contacts: data.contacts || [],
           socials: data.social_urls || [],
-          verifications: {
-            phone: true,
-            address: true,
-            employees: false
-          },
+          verifications: data.verifications,
           reviews: data.comments || []
         });
         setProcessingState(false);

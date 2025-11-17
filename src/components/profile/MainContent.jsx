@@ -163,23 +163,23 @@ function MainContent({ slug, about, location, phones, verifications, reviews, co
       <div className="row g-4 mb-5">
         <div className="col-md-4 wow fadeIn" data-wow-delay="0.2s">
             <div className="verification-stat-card">
-                <i className={`fa fa-check-circle fa-2x mb-2 ${verifications.phone ? 'text-primary' : 'text-muted'}`}></i>
+                <i className={`fa-solid fa-phone fa-2x mb-2 ${verifications.phone ? 'text-primary' : 'text-muted'}`}></i>
                 <h5 className="mb-1">Phone Verified</h5>
                 <p className="mb-0 fw-bold">{verifications.phone ? '+1' : 'Not Verified'}</p>
             </div>
         </div>
         <div className="col-md-4 wow fadeIn" data-wow-delay="0.4s">
             <div className="verification-stat-card">
-                <i className={`fa fa-check-circle fa-2x mb-2 ${verifications.address ? 'text-primary' : 'text-muted'}`}></i>
+                <i className={`fa-solid fa-address-book fa-2x mb-2 ${verifications.address ? 'text-primary' : 'text-muted'}`}></i>
                 <h5 className="mb-1">Address Verified</h5>
                 <p className="mb-0 fw-bold">{verifications.address ? '+1' : 'Not Verified'}</p>
             </div>
         </div>
         <div className="col-md-4 wow fadeIn" data-wow-delay="0.6s">
             <div className="verification-stat-card">
-                <i className={`fa fa-users fa-2x mb-2 ${verifications.employees ? 'text-primary' : 'text-dark'}`}></i>
+                <i className={`fa-solid fa-people-group fa-2x mb-2 ${verifications.employees ? 'text-primary' : 'text-muted'}`}></i>
                 <h5 className="mb-1">Contacts</h5>
-                <p className={`mb-0 fw-bold ${!verifications.employees && 'text-muted'}`}>{verifications.employees ? '+1' : 'Not Verified'}</p>
+                <p className={`mb-0 fw-bold`}>{verifications.employees ? '+1' : 'Not Verified'}</p>
             </div>
         </div>
       </div>
