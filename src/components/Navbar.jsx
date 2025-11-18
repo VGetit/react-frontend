@@ -2,9 +2,10 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/VLogo.png';
 
 function Navbar() {
-  const { authToken, logout } = useAuth(); // User objesini buradan alıyoruz
+  const { authToken, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,7 +17,11 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
       <div className="container-xxl">
       <a href="/" className="navbar-brand p-0">
-        <h1 className="m-0"><i className="fa fa-server me-3"></i>VGetit</h1>
+        
+        <h1 className="m-0">
+          <img src={logo} alt="Logo" style={{ width: '50px', marginRight: '10px' }} />
+        Getit
+        </h1>
       </a>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span className="fa fa-bars"></span>

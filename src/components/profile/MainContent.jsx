@@ -211,7 +211,7 @@ function MainContent({ slug, about, location, phones, verifications, reviews, co
         <p>Be the first to leave a comment!</p>
       )}
 
-      {/* YENİ: Yorum Ekleme Formu */}
+      
       <div className="section-title position-relative mt-5 mb-4 pb-4">
         <h3 className="mb-2">Your Opinion Matters</h3>
       </div>

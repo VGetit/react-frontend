@@ -7,12 +7,9 @@ import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/axiosConfig'
 
-/**
- * Bu, sadece bu sayfa için kullanılan basit bir başlık (Header) bileşenidir.
- * Profil sayfasındaki başlığa benzer bir tasarım kullanır.
- */
+
 const AuthHeader = ({ title }) => (
-  <div className="py-5 hero-header modern-hero mb-5">
+  <div className="py-3 hero-header modern-hero">
     <div className="container my-5 py-5 px-lg-5">
       <div className="row g-5">
         <div className="col-lg-12 text-center">
@@ -49,16 +46,12 @@ function AuthPage({ defaultView = 'login' }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Hataları temizle
+    setError(null);
 
     if (isLoginView) {
       try {
-        // --- LOGIN API İSTEĞİ ---
-        // Not: Django'nun token endpoint'i genellikle /api/token/ gibidir (JWT için)
-        // veya /api/api-token-auth/ (DRF Token için)
         const response = await apiClient.post('http://127.0.0.1:8000/api/token/', { username, password });
         
-        // 👈 ÖNEMLİ: API'den gelen token'ı al (response.data.token veya response.data.access)
         const token = response.data.access; 
         
         if (token) {
@@ -73,7 +66,6 @@ function AuthPage({ defaultView = 'login' }) {
         console.error('Giriş hatası:', err);
       }
     } else {
-      // --- SIGNUP API İSTEĞİ ---
       try {
         await apiClient.post('http://127.0.0.1:8000/api/register/', { username, email, password });
         alert('Kayıt başarılı! Lütfen giriş yapın.');
@@ -104,8 +96,8 @@ function AuthPage({ defaultView = 'login' }) {
         <div className="container px-lg-5">
           <div className="row justify-content-center">
             <div className="col-lg-6 col-md-8">
-              
               <div className="auth-card wow fadeInUp" data-wow-delay="0.1s">
+                <h1 className="text-center mb-4">{isLoginView ? 'Welcome Back!' : 'Create an Account'}</h1>
                 <form onSubmit={handleSubmit} className="auth-form">
                   {error && <div className="alert alert-danger">{error}</div>}
                     <div className="form-floating mb-3">

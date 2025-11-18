@@ -26,16 +26,21 @@ const getPlatformName = (url) => {
 };
 
 function ScoreCard({ score, isProcessing }) {
+  let color = '';
+  if (score >= 4) { color = 'green';}
+  else if (score >= 2.5) { color = 'orange';}
+  else { color = 'red'; }
+
   return (
     <div className="score-section wow fadeInUp" data-wow-delay="0.3s">
       <div className="text-center">
-        <div className="score-circle">
+        <div className="score-circle" style={{borderColor: color}}>
           {isProcessing ? (
             <div className="spinner-border text-primary" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
           ) : (
-            <h1 className="display-4 fw-bold text-primary mb-0">
+            <h1 className="display-4 fw-bold mb-0" style={{color: color}}>
               {score || '-'}<small className="fs-5 text-dark">/5.0</small>
             </h1>
           )}
@@ -69,7 +74,7 @@ function Sidebar({ totalScore, scoreDetails, contact, socials, isProcessing }) {
                     href={url.startsWith('http') ? url : `https:${url}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-outline-primary"
+                    className="btn btn-outline-dark"
                     title={platform}
                   >
                     <i className={`${icon} me-2`}></i>

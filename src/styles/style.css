@@ -6,6 +6,10 @@
     --dark: #1D2833;
 }
 
+body, h1, h2, h3, h4, h5, h6{
+    font-family: 'Poppins', sans-serif !important;
+}
+
 
 /*** Spinner ***/
 #spinner {
@@ -105,7 +109,7 @@ h6,
 
 .sticky-top.navbar-light .navbar-nav .nav-link {
     padding: 20px 0;
-    color: var(--dark) !important;
+    color: #FFFFFF !important;
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
@@ -167,9 +171,6 @@ h6,
         background: #FFFFFF;
     }
 
-    .sticky-top.navbar-light .navbar-brand h1 {
-        color: var(--primary);
-    }
 }
 
 
@@ -437,11 +438,12 @@ h6,
 
 .search-bar-wrapper .search-icon {
     position: absolute;
-    left: 20px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
     color: rgba(255, 255, 255, 0.8);
     font-size: 1.2rem;
+    z-index: 1;
 }
 
 .search-bar-wrapper .btn {
@@ -540,7 +542,7 @@ h6,
 }
 
 .sticky-top.navbar-light {
-    background: #ffffff !important;
+    background: var(--dark) !important;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
@@ -577,7 +579,7 @@ h6,
     transform: translateX(-50%);
     width: 40px;
     height: 3px;
-    background-color: var(--primary);
+    background-color: var(--dark);
 }
 
 .score-display {

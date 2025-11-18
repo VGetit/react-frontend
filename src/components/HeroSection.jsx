@@ -65,7 +65,7 @@ function HeroSection() {
               Find the best among thousands of companies and take the right step with real reviews.
             </p>
             <div className="search-bar-wrapper position-relative mx-auto wow fadeInUp" data-wow-delay="0.3s" style={{ maxWidth: '600px' }}>
-              <i className="fa fa-search search-icon"></i>
+              <i className="fa-solid fa-globe search-icon"></i>
               <input
                 className="form-control"
                 type="text"

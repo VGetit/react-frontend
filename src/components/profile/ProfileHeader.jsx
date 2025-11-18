@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 
 function ProfileHeader({ companyName, totalScore, verificationCount, reviewCount }) {
   return (
-    <div className="profile-header mb-5">
+    <div className="hero-header modern-hero mb-5 py-5">
       <div className="container px-lg-5">
-        <div className="row g-5">
+        <div className="row g-5 mt-4">
           <div className="col-lg-12">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-4">
