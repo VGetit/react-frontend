@@ -28,14 +28,9 @@ const AuthHeader = ({ title }) => (
   </div>
 );
 
-/**
- * Ana Login/Signup Sayfa Bileşeni
- */
 function AuthPage({ defaultView = 'login' }) {
-  // true ise Login formu, false ise Signup formu gösterilir
   const [isLoginView, setIsLoginView] = useState(defaultView === 'login');
 
-  // Form alanları için state'ler
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

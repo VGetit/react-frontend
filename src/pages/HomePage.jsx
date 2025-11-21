@@ -8,18 +8,8 @@ import RecentCompanies from '../components/RecentCompanies';
 import Footer from '../components/Footer';
 
 function HomePage() {
-  // const [isLoading, setIsLoading] = useState(true);
-
   return (
-    // Use a Fragment (<>) to wrap everything into a single element
     <> 
-      {/* SPINNER: Now this comment is correctly placed inside the single root element.
-        {isLoading && (
-          <div id="spinner" className="show bg-white position-fixed ...">
-            ...
-          </div>
-        )}
-      */}
 
       <div className="bg-white p-0">
         <div className="position-relative p-0">

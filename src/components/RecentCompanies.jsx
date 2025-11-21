@@ -1,29 +1,38 @@
 // src/components/RecentCompanies.jsx
 import React from 'react';
+import { useState, useEffect } from 'react';
 import CompanyCard from './CompanyCard';
+import apiClient from '../api/axiosConfig';
 
 function RecentCompanies() {
-  // Bu veriler ileride Django API'den gelecek. Şimdilik sahte veri kullanıyoruz.
-  const sampleCompanies = [
-    { id: 1, name: 'XYZ Teknoloji A.Ş.', category: 'Yazılım & Danışmanlık', score: 4.8, logoText: 'XYZ' },
-    { id: 2, name: 'ABC Kargo', category: 'Lojistik Hizmetleri', score: 3.5, logoText: 'ABC' },
-    { id: 3, name: 'Hızlı Hosting', category: 'Web Servisleri', score: 4.2, logoText: 'HH' },
-  ];
+  const [recentCompanies, setRecentCompanies] = useState([]);
+
+  useEffect(() => {
+        const fetchRecent = async () => {
+            try {
+                const response = await apiClient.get('http://127.0.0.1:8000/companies/recent');
+                setRecentCompanies(response.data);
+            } catch (error) {
+                console.error("Error on fetching recently updated companies!", error);
+            }
+        };
+        fetchRecent();
+    }, []);
 
   return (
     <div className="container-xxl py-5">
       <div className="container px-lg-5">
         <div className="section-title position-relative text-center mx-auto mb-5 pb-4 wow fadeInUp" data-wow-delay="0.1s" style={{ maxWidth: '600px' }}>
-          <h1 className="mb-3">Recently Viewed</h1>
+          <h1 className="mb-3">Recently Updated</h1>
         </div>
         <div className="row g-4 justify-content-center">
-          {sampleCompanies.map((company, index) => (
-            <div className="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay={`${(index * 0.2) + 0.2}s`} key={company.id}>
+          {recentCompanies.map((company, index) => (
+            <div className="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay={`${(index * 0.2) + 0.2}s`} key={index}>
               <CompanyCard
                 name={company.name}
-                category={company.category}
+                domain={company.slug}
                 score={company.score}
-                logoText={company.logoText}
+                logoText={company.name.charAt(0)}
               />
             </div>
           ))}

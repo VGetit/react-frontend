@@ -4,11 +4,13 @@ import HomePage from './pages/HomePage';
 import CompanyProfilePage from './pages/CompanyProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import AuthPage from './pages/AuthPage';
+import AxiosInterceptorSetup from './api/axiosInterceptorSetup';
 
 
 function App() {
     return (
     <>
+    <AxiosInterceptorSetup />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/company/:slug" element={<CompanyProfilePage />} />

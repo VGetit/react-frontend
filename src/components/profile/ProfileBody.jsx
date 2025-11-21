@@ -3,7 +3,7 @@ import React from 'react';
 import MainContent from './MainContent';
 import Sidebar from './Sidebar';
 
-function ProfileBody({ companyData, isProcessing }) {
+function ProfileBody({ companyData, isProcessing, onRefresh }) {
   const renderPlaceholder = () => (
     <div className="text-center py-5">
       <div className="spinner-grow text-primary" role="status">
@@ -27,6 +27,7 @@ function ProfileBody({ companyData, isProcessing }) {
                 verifications={companyData.verifications}
                 reviews={companyData.reviews}
                 contacts={companyData.contacts}
+                onRefresh={onRefresh}
               />
             )}
           </div>

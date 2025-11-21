@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import apiClient from '../../api/axiosConfig'
+import { useAuth } from '../../context/AuthContext';
 
 const StarRating = ({ rating }) => {
   const totalStars = 5;
@@ -78,14 +79,14 @@ const PhonesTable = ({ phones }) => (
       <thead>
         <tr>
           <th scope="col">Number</th>
-          <th scope="col" className="text-center">Label</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         {phones.map((phones, index) => (
           <tr key={index}>
             <td>{phones.number}</td>
-            <td></td>
+            <td>{phones.description}</td>
           </tr>
         ))}
       </tbody>
@@ -93,25 +94,42 @@ const PhonesTable = ({ phones }) => (
   </div>
 );
 
-const handleCommentSubmit = async (slug, text, rating) => {
-  await apiClient.post(`/companies/digikeycom/comments/`, { text, rating });
+const handleCommentSubmit = async (slug, text, rating, onCommentSuccess) => {
+  try {
+    await apiClient.post(`/companies/${slug}/comments/`, { text, rating });
+    if (onCommentSuccess) {
+      onCommentSuccess();
+    }
+  } catch (error) {
+    console.error('Error submitting comment:', error);
+    alert('Failed to submit comment. Please try again.');
+  }
 }
 
-const AddCommentForm = (slug) => {
+const AddCommentForm = ({ slug, onCommentSuccess }) => {
+  const { authToken } = useAuth();
   const [text, setText] = useState('');
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!text || rating === 0) {
       alert('Please write a review and select a rating.');
       return;
     }
-    handleCommentSubmit(slug, text, rating);
-    console.log({ text, rating });
+    if (!authToken) {
+      alert('You must be logged in to submit a review.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    await handleCommentSubmit(slug, text, rating, onCommentSuccess);
     setText('');
     setRating(0);
+    setIsSubmitting(false);
   };
 
   return (
@@ -137,15 +155,19 @@ const AddCommentForm = (slug) => {
           rows="4"
           placeholder="Share your experience..."
           value={text}
+          disabled={!authToken || isSubmitting}
           onChange={(e) => setText(e.target.value)}
         ></textarea>
-        <button type="submit" className="btn btn-primary mt-3">Submit Comment</button>
+        {!authToken && <p className="text-muted mt-2">You must be logged in to submit a review.</p>}
+        <button disabled={!authToken || isSubmitting} type="submit" className="btn btn-primary mt-3">
+          {isSubmitting ? 'Submitting...' : 'Submit Comment'}
+        </button>
       </form>
     </div>
   );
 };
 
-function MainContent({ slug, about, location, phones, verifications, reviews, contacts }) {
+function MainContent({ slug, about, location, phones, verifications, reviews, contacts, onRefresh }) {
   return (
     <>
       <div className="section-title position-relative mb-4 pb-4">
@@ -215,7 +237,7 @@ function MainContent({ slug, about, location, phones, verifications, reviews, co
       <div className="section-title position-relative mt-5 mb-4 pb-4">
         <h3 className="mb-2">Your Opinion Matters</h3>
       </div>
-      <AddCommentForm slug={slug}/>
+      <AddCommentForm slug={slug} onCommentSuccess={onRefresh}/>
     </>
   );
 }

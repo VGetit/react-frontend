@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { customSlugify, formatUrl } from '../utils/slugify';
 
 function HeroSection() {
   const [query, setQuery] = useState('');
@@ -22,8 +23,9 @@ function HeroSection() {
     setSearchStatus(null);
 
     try {
-      const formattedUrl = query.startsWith('http') ? query : `https://${query}`;
-      const response = await axios.get(`http://127.0.0.1:8000/companies/search/?url=${query}`);
+      const formattedUrl = formatUrl(query);
+      const companySlug = customSlugify(formattedUrl);
+      const response = await axios.get(`http://127.0.0.1:8000/companies/search/?url=${formattedUrl}`);
       
       const { status, company, message } = response.data;
 
@@ -38,7 +40,7 @@ function HeroSection() {
           company: company
         });
         // Optionally navigate to a loading page
-        navigate(`/company/${company.slug}`);
+        navigate(`/company/${companySlug}`);
       }
     } catch (error) {
       console.error("Search error:", error);

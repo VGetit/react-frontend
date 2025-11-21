@@ -36,14 +36,14 @@ function CompanyProfilePage() {
   const [error, setError] = useState(null);
   const [processingState, setProcessingState] = useState(false);
 
-  useEffect(() => {
-    const fetchCompanyData = async () => {
+  const fetchCompanyData = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        const response = await axios.get(`http://127.0.0.1:8000/companies/search/?url=${slug}`);
+        const response = await axios.get(`http://127.0.0.1:8000/companies/get/?slug=${slug}`);
         const { status, company: data, message } = response.data;
+        console.log('Response data:', response.data);
 
         if (status === 'processing') {
           setProcessingState(true);
@@ -54,6 +54,11 @@ function CompanyProfilePage() {
           });
           return;
         }
+        if (status === 'error') {
+          setError(message || 'Error fetching company data.');
+          return;
+        }
+        console.log('Fetched company data:', data);
 
         setCompanyData({
           name: data.name,
@@ -77,11 +82,16 @@ function CompanyProfilePage() {
         }
   };
 
+  useEffect(() => {
   if (slug) {
     fetchCompanyData();
   }
 
   }, [slug]);
+
+  const handleRefreshData = () => {
+    fetchCompanyData();
+  };
 
   if (isLoading) {
     return (
@@ -112,6 +122,7 @@ function CompanyProfilePage() {
       <ProfileBody 
         companyData={companyData}
         isProcessing={processingState}
+        onRefresh={handleRefreshData}
       />
 
       <Footer />
