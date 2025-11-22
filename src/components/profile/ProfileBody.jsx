@@ -34,6 +34,7 @@ function ProfileBody({ companyData, isProcessing, onRefresh }) {
           <div className="col-lg-4">
             <Sidebar
               totalScore={companyData.totalScore}
+              companySlug={companyData.slug}
               scoreDetails={
                 isProcessing 
                   ? 'Calculating scores...'

@@ -54,12 +54,61 @@ function ScoreCard({ score, isProcessing }) {
   );
 }
 
-function Sidebar({ totalScore, scoreDetails, contact, socials, isProcessing }) {
+function Sidebar({ totalScore, companySlug, scoreDetails, contact, socials, isProcessing }) {
   const socialLinks = SocialLinksComponent(socials);
+  const badgeUrl = `http://localhost:8000/embed/company/${companySlug}/`;
+  const badgeCode = `<iframe src="${badgeUrl}" width="300" height="280" frameborder="0" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);" title="VGetit Trust Badge"></iframe>`;
+
+  const copyBadgeCode = () => {
+    navigator.clipboard.writeText(badgeCode).then(() => {
+      alert('Badge code copied to clipboard!');
+    }).catch(() => {
+      alert('Failed to copy code');
+    });
+  };
+
+  const previewBadge = () => {
+    const newWindow = window.open('', 'BadgePreview', 'width=350,height=400');
+    newWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Badge Preview</title>
+        <style>body { margin: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto; }</style>
+      </head>
+      <body>
+        ${badgeCode}
+      </body>
+      </html>
+    `);
+  };
 
   return (
     <>
       <ScoreCard score={totalScore} isProcessing={isProcessing} />
+
+      <div className="profile-sidebar-card wow fadeInUp" data-wow-delay="0.5s">
+        <h4 className="card-title">
+          <i className="fas fa-share-alt me-2"></i>Share Your Badge
+        </h4>
+        <p className="text-muted small mb-3">
+          Add this badge to your website to show your trust score:
+        </p>
+        <button 
+          className="btn btn-sm btn-dark w-100 mb-2"
+          onClick={copyBadgeCode}
+        >
+          <i className="fas fa-copy me-2"></i>
+          Copy Badge Code
+        </button>
+        <button 
+          className="btn btn-sm btn-outline-dark w-100"
+          onClick={previewBadge}
+        >
+          <i className="fas fa-eye me-2"></i>
+          Preview Badge
+        </button>
+      </div>
 
       <div className="profile-sidebar-card wow fadeInUp" data-wow-delay="0.5s">
         <h4 className="card-title">Social Links</h4>

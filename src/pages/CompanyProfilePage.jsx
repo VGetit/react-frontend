@@ -29,6 +29,28 @@ function ProcessingState({ company }) {
   );
 }
 
+function ErrorState({ message }) {
+  return (
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-lg-6">
+          <div className="alert alert-danger" role="alert">
+            <div className="text-center">
+              <i className="fas fa-exclamation-circle" style={{ fontSize: '48px', marginBottom: '20px' }}></i>
+              <h4 className="alert-heading">Error Loading Company</h4>
+              <p className="mb-4">{message}</p>
+              <Link to="/" className="btn btn-outline-danger">
+                <i className="fas fa-arrow-left me-2"></i>
+                Return to Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CompanyProfilePage() {
   const { slug } = useParams();
   const [companyData, setCompanyData] = useState(null);
@@ -40,6 +62,7 @@ function CompanyProfilePage() {
       try {
         setIsLoading(true);
         setError(null);
+        setProcessingState(false);
 
         const response = await axios.get(`http://127.0.0.1:8000/companies/get/?slug=${slug}`);
         const { status, company: data, message } = response.data;
@@ -52,10 +75,13 @@ function CompanyProfilePage() {
             slug: data.slug,
             status: 'processing'
           });
+          setIsLoading(false);
           return;
         }
         if (status === 'error') {
-          setError(message || 'Error fetching company data.');
+          setError(message || 'Unable to find the company you\'re looking for. Please check the URL and try again.');
+          setProcessingState(false);
+          setIsLoading(false);
           return;
         }
         console.log('Fetched company data:', data);
@@ -75,7 +101,8 @@ function CompanyProfilePage() {
         setProcessingState(false);
 
         } catch (err) {
-          setError('Error on loading company data!');
+          setError('Unable to find the company you\'re looking for. Please check the URL and try again.');
+          setProcessingState(false);
           console.error(err);
         } finally {
           setIsLoading(false);
@@ -103,10 +130,28 @@ function CompanyProfilePage() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="bg-white p-0">
+        <Navbar />
+        <ErrorState message={error} />
+        <Footer />
+      </div>
+    );
+  }
+
+  if (processingState) {
+    return (
+      <div className="bg-white p-0">
+        <Navbar />
+        <ProcessingState company={companyData} />
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white p-0">
-      {processingState && <ProcessingState company={companyData} />}
-      
       <div className="position-relative p-0">
         <Navbar />
         <ProfileHeader 

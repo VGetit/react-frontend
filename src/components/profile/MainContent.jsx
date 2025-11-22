@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import apiClient from '../../api/axiosConfig'
 import { useAuth } from '../../context/AuthContext';
 
@@ -21,11 +21,14 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const TestimonialCard = ({ review }) => (
+const TestimonialCard = ({ review, isOwnReview }) => (
   <div className="review-card wow fadeInUp" data-wow-delay="0.2s">
     <div className="review-header">
       <div className="review-author-info">
-        <h6 className="fw-bold mb-0">{review.user}</h6>
+        <h6 className="fw-bold mb-0">
+          {review.user}
+          {isOwnReview && <span className="badge bg-primary ms-2">Your Review</span>}
+        </h6>
         <span className="review-date">{new Date(review.created_at).toLocaleDateString()}</span>
       </div>
       <div className="ms-auto">
@@ -94,9 +97,15 @@ const PhonesTable = ({ phones }) => (
   </div>
 );
 
-const handleCommentSubmit = async (slug, text, rating, onCommentSuccess) => {
+const handleCommentSubmit = async (slug, text, rating, onCommentSuccess, commentId = null) => {
   try {
-    await apiClient.post(`/companies/${slug}/comments/`, { text, rating });
+    if (commentId) {
+      // Update existing comment
+      await apiClient.put(`/companies/${slug}/comments/${commentId}/`, { text, rating });
+    } else {
+      // Create new comment
+      await apiClient.post(`/companies/${slug}/comments/`, { text, rating });
+    }
     if (onCommentSuccess) {
       onCommentSuccess();
     }
@@ -106,12 +115,23 @@ const handleCommentSubmit = async (slug, text, rating, onCommentSuccess) => {
   }
 }
 
-const AddCommentForm = ({ slug, onCommentSuccess }) => {
-  const { authToken } = useAuth();
+const AddCommentForm = ({ slug, onCommentSuccess, initialComment = null, onCancelEdit = null }) => {
+  const { authToken, user } = useAuth();
   const [text, setText] = useState('');
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Sync form fields when initialComment changes
+  useEffect(() => {
+    if (initialComment) {
+      setText(initialComment.text || '');
+      setRating(initialComment.rating || 0);
+    } else {
+      setText('');
+      setRating(0);
+    }
+  }, [initialComment]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -126,15 +146,33 @@ const AddCommentForm = ({ slug, onCommentSuccess }) => {
     }
 
     setIsSubmitting(true);
-    await handleCommentSubmit(slug, text, rating, onCommentSuccess);
+    await handleCommentSubmit(
+      slug, 
+      text, 
+      rating, 
+      onCommentSuccess,
+      initialComment?.id
+    );
+    
+    if (!initialComment) {
+      setText('');
+      setRating(0);
+    }
+    
+    setIsSubmitting(false);
+  };
+
+  const handleCancel = () => {
     setText('');
     setRating(0);
-    setIsSubmitting(false);
+    if (onCancelEdit) {
+      onCancelEdit();
+    }
   };
 
   return (
     <div className="add-comment-form wow fadeInUp" data-wow-delay="0.3s">
-      <h3 className="form-title">Leave a Comment</h3>
+      <h3 className="form-title">{initialComment ? 'Update Your Review' : 'Leave a Review'}</h3>
       <form onSubmit={handleSubmit}>
         <div className="rating-input-container">
           <label>Your Rating:</label>
@@ -159,15 +197,26 @@ const AddCommentForm = ({ slug, onCommentSuccess }) => {
           onChange={(e) => setText(e.target.value)}
         ></textarea>
         {!authToken && <p className="text-muted mt-2">You must be logged in to submit a review.</p>}
-        <button disabled={!authToken || isSubmitting} type="submit" className="btn btn-primary mt-3">
-          {isSubmitting ? 'Submitting...' : 'Submit Comment'}
-        </button>
+        <div className="mt-3">
+          <button 
+            disabled={!authToken || isSubmitting} 
+            type="submit" 
+            className="btn btn-primary"
+          >
+            {isSubmitting ? 'Submitting...' : (initialComment ? 'Update Review' : 'Submit Review')}
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
 function MainContent({ slug, about, location, phones, verifications, reviews, contacts, onRefresh }) {
+  const { user } = useAuth();
+
+  // Find user's own comment if logged in
+  const userComment = user && reviews ? reviews.find(review => review.user === user) : null;
+
   return (
     <>
       <div className="section-title position-relative mb-4 pb-4">
@@ -227,17 +276,46 @@ function MainContent({ slug, about, location, phones, verifications, reviews, co
       <div className="section-title position-relative mt-5 mb-4 pb-4">
         <h3 className="mb-2">Reviews</h3>
       </div>
+      
+      {userComment && (
+        <div className="mb-4">
+          <div className="alert alert-info" role="alert">
+            <i className="fas fa-info-circle me-2"></i>
+            <strong>You have already reviewed this company.</strong> When you submit a new review below, it will update your existing review.
+          </div>
+          <TestimonialCard 
+            review={userComment} 
+            isOwnReview={true}
+          />
+        </div>
+      )}
+      
       {reviews && reviews.length > 0 ? (
-        reviews.map(comment => <TestimonialCard key={comment.id} review={comment} />)
+        reviews
+          .filter(comment => !userComment || comment.id !== userComment.id)
+          .map(comment => (
+            <TestimonialCard 
+              key={comment.id} 
+              review={comment} 
+              isOwnReview={false}
+            />
+          ))
       ) : (
-        <p>Be the first to leave a comment!</p>
+        !userComment && <p>Be the first to leave a comment!</p>
       )}
 
       
       <div className="section-title position-relative mt-5 mb-4 pb-4">
         <h3 className="mb-2">Your Opinion Matters</h3>
       </div>
-      <AddCommentForm slug={slug} onCommentSuccess={onRefresh}/>
+      <AddCommentForm 
+        key={userComment?.id || 'new'}
+        slug={slug} 
+        onCommentSuccess={() => {
+          onRefresh();
+        }}
+        initialComment={userComment}
+      />
     </>
   );
 }

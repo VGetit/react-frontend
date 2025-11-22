@@ -6,7 +6,7 @@ export const customSlugify = (text) => {
     'Ş': 's', 'I': 'i', 'Ğ': 'g', 'Ü': 'u', 'Ö': 'o', 'Ç': 'c', 'İ': 'i'
   };
   
-  slug = slug.split('').map(char => trMap[char] || char).join('');
+  let slug = text.split('').map(char => trMap[char] || char).join('');
 
   slug = slug.replace(/[^a-z0-9]+/g, '-');
 
@@ -18,7 +18,7 @@ export const customSlugify = (text) => {
 export const formatUrl = (url) => {
   if (!url) return "";
 
-  let formattedUrl = text.toLowerCase();
+  let formattedUrl = url.toLowerCase();
   formattedUrl = formattedUrl.replace("https://", "").replace("http://", "").replace("www.", "");
   return url;
 };
