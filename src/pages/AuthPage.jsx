@@ -1,5 +1,3 @@
-// src/pages/AuthPage.jsx
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -53,21 +51,21 @@ function AuthPage({ defaultView = 'login' }) {
           login(token);
           navigate('/');
         } else {
-          setError('Token alınamadı.');
+          setError('Token error.');
         }
 
       } catch (err) {
-        setError('E-posta veya şifre hatalı.');
-        console.error('Giriş hatası:', err);
+        setError('Username or password is incorrect.');
+        console.error('Login error:', err);
       }
     } else {
       try {
         await apiClient.post('http://127.0.0.1:8000/api/register/', { username, email, password });
-        alert('Kayıt başarılı! Lütfen giriş yapın.');
+        alert('Account created successfully! Please log in.');
         setIsLoginView(true);
       } catch (err) {
-        setError('Kayıt sırasında bir hata oluştu. E-posta veya kullanıcı adı zaten kullanılıyor olabilir.');
-        console.error('Kayıt hatası:', err);
+        setError('Error creating account. Please try again.');
+        console.error('Error: ', err);
       }
     }
   };

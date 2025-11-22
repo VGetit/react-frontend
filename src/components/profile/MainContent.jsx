@@ -214,7 +214,7 @@ const AddCommentForm = ({ slug, onCommentSuccess, initialComment = null, onCance
 function MainContent({ slug, about, location, phones, verifications, reviews, contacts, onRefresh }) {
   const { user } = useAuth();
 
-  // Find user's own comment if logged in
+  // Find user's own comment if logged i
   const userComment = user && reviews ? reviews.find(review => review.user === user) : null;
 
   return (

@@ -31,7 +31,7 @@ function ProcessingState({ company }) {
 
 function ErrorState({ message }) {
   return (
-    <div className="container mt-5">
+    <div className="hero-header modern-hero pt-5" style={{height: '65vh'}}>
       <div className="row justify-content-center">
         <div className="col-lg-6">
           <div className="alert alert-danger" role="alert">
