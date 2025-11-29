@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import apiClient from '../api/axiosConfig'
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -64,7 +65,7 @@ function CompanyProfilePage() {
         setError(null);
         setProcessingState(false);
 
-        const response = await axios.get(`http://127.0.0.1:8000/companies/get/?slug=${slug}`);
+        const response = await apiClient.get(`/companies/get/?slug=${slug}`);
         const { status, company: data, message } = response.data;
         console.log('Response data:', response.data);
 

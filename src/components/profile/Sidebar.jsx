@@ -56,8 +56,8 @@ function ScoreCard({ score, isProcessing }) {
 
 function Sidebar({ totalScore, companySlug, scoreDetails, contact, socials, isProcessing }) {
   const socialLinks = SocialLinksComponent(socials);
-  const badgeUrl = `http://localhost:8000/embed/company/${companySlug}/`;
-  const badgeCode = `<iframe src="${badgeUrl}" width="300" height="280" frameborder="0" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);" title="VGetit Trust Badge"></iframe>`;
+  const badgeUrl = `https://vgetit.com/api/embed/company/${companySlug}/`;
+  const badgeCode = `<iframe src="${badgeUrl}" width="300" height="134" frameborder="0" style="border-radius: 10px;" title="VGetit Trust Badge"></iframe>`;
 
   const copyBadgeCode = () => {
     navigator.clipboard.writeText(badgeCode).then(() => {

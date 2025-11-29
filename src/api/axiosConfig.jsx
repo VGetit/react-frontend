@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Temel API URL'nizi buraya ayarlayabilirsiniz
 const apiClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: 'https://vgetit.com/api',
 });
 
 

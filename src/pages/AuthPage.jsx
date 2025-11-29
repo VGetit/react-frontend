@@ -43,7 +43,7 @@ function AuthPage({ defaultView = 'login' }) {
 
     if (isLoginView) {
       try {
-        const response = await apiClient.post('http://127.0.0.1:8000/api/token/', { username, password });
+        const response = await apiClient.post('/api/token/', { username, password });
         
         const token = response.data.access; 
         
@@ -60,7 +60,7 @@ function AuthPage({ defaultView = 'login' }) {
       }
     } else {
       try {
-        await apiClient.post('http://127.0.0.1:8000/api/register/', { username, email, password });
+        await apiClient.post('/api/register/', { username, email, password });
         alert('Account created successfully! Please log in.');
         setIsLoginView(true);
       } catch (err) {

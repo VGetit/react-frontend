@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { customSlugify, formatUrl } from '../utils/slugify';
+import apiClient from '../api/axiosConfig';
 
 function HeroSection() {
   const [query, setQuery] = useState('');
@@ -25,7 +26,7 @@ function HeroSection() {
     try {
       const formattedUrl = formatUrl(query);
       const companySlug = customSlugify(formattedUrl);
-      const response = await axios.get(`http://127.0.0.1:8000/companies/search/?url=${formattedUrl}`);
+      const response = await apiClient.get(`/companies/search/?url=${formattedUrl}`);
       
       const { status, company, message } = response.data;
 
