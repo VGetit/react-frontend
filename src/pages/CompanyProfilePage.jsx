@@ -97,7 +97,10 @@ function CompanyProfilePage() {
           contacts: data.contacts || [],
           socials: data.social_urls || [],
           verifications: data.verifications,
-          reviews: data.comments || []
+          reviews: data.comments || [],
+          registration_date: data.registration_date,
+          legal_status: data.legal_status,
+          origin_country: data.origin_country,
         });
         setProcessingState(false);
 

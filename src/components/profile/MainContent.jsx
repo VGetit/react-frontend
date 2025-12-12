@@ -211,7 +211,7 @@ const AddCommentForm = ({ slug, onCommentSuccess, initialComment = null, onCance
   );
 };
 
-function MainContent({ slug, about, location, phones, verifications, reviews, contacts, onRefresh }) {
+function MainContent({ slug, about, location, phones, verifications, reviews, contacts, onRefresh, registration_date, legal_status, origin_country }) {
   const { user } = useAuth();
 
   // Find user's own comment if logged i
@@ -223,6 +223,16 @@ function MainContent({ slug, about, location, phones, verifications, reviews, co
         <h3 className="mb-2">About Company</h3>
       </div>
       <p className="mb-5">{about}</p>
+      {registration_date && (
+        <p className="mb-2"><strong>Registration Date:</strong> {registration_date}</p>
+      )}
+      {legal_status && (
+        <p className="mb-2"><strong>Legal Status:</strong> {legal_status}</p>
+      )}
+      {origin_country && (
+        <p className="mb-5"><strong>Origin Country:</strong> {origin_country}</p>
+      )}
+
       <div className="section-title position-relative mb-4 pb-4">
         <h3 className="mb-2">Location</h3>
       </div>

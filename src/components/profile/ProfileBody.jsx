@@ -28,6 +28,9 @@ function ProfileBody({ companyData, isProcessing, onRefresh }) {
                 reviews={companyData.reviews}
                 contacts={companyData.contacts}
                 onRefresh={onRefresh}
+                registration_date={companyData.registration_date}
+                legal_status={companyData.legal_status}
+                origin_country={companyData.origin_country}
               />
             )}
           </div>

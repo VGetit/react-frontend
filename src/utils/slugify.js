@@ -20,5 +20,5 @@ export const formatUrl = (url) => {
 
   let formattedUrl = url.toLowerCase();
   formattedUrl = formattedUrl.replace("https://", "").replace("http://", "").replace("www.", "");
-  return url;
+  return formattedUrl;
 };
